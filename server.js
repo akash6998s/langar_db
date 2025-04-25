@@ -32,6 +32,11 @@ const writeJSON = (filePath, data) => {
 
 // Routes
 
+app.get("/", (req, res) => {
+  res.send("🎉 Langar Sewa API is Live");
+});
+
+
 // Get member details
 app.get('/member-full-details', (req, res) => {
   const members = readJSON(membersPath, []);
