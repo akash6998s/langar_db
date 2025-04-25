@@ -254,6 +254,6 @@ app.get('/overall-summary', (req, res) => {
 });
 
 // Start server
-app.listen(process.env.PORT || 8080, '0.0.0.0', () => {
-  console.log(`Server running on http://localhost:${process.env.PORT || 8080}`);
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
 });
