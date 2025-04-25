@@ -1,0 +1,44 @@
+[
+  {
+    "2024": {
+      "July": {
+        "12": {
+          "2": "present",
+          "4": "present",
+          "7": "present",
+          "9": "present"
+        }
+      }
+    },
+    "2025": {
+      "April": {
+        "15": {
+          "1": "present",
+          "2": "present",
+          "3": "present",
+          "13": "present",
+          "23": "present"
+        },
+        "25": {
+          "1": "present",
+          "2": "present",
+          "3": "present"
+        }
+      },
+      "March": {
+        "1": {
+          "1": "present",
+          "2": "present"
+        }
+      }
+    },
+    "2026": {
+      "January": {
+        "1": {
+          "4": "present",
+          "6": "present"
+        }
+      }
+    }
+  }
+]
