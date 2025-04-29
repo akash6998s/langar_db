@@ -4,7 +4,7 @@ const path = require('path');
 const cors = require('cors');
 
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
@@ -32,6 +32,11 @@ const writeJSON = (filePath, data) => {
 
 // Routes
 
+app.get("/", (req, res) => {
+  res.send("🎉 Langar Sewa API is Live");
+});
+
+
 // Get member details
 app.get('/member-full-details', (req, res) => {
   const members = readJSON(membersPath, []);
@@ -44,7 +49,6 @@ app.get('/attendance', (req, res) => {
   res.json(attendance);
 });
 
-// Update attendance data
 // Helper function to convert month name to month number
 const monthNameToNumber = (monthName) => {
   const monthMap = {
@@ -65,6 +69,17 @@ const monthNameToNumber = (monthName) => {
   return monthMap[monthName] || null;  // Return null if invalid month name
 };
 
+// Helper function to convert month number to month name
+const monthNumberToName = (monthNumber) => {
+  const monthNames = [
+    "January", "February", "March", "April", "May", "June", "July", "August", 
+    "September", "October", "November", "December"
+  ];
+  return monthNames[monthNumber - 1] || null;
+};
+
+// Update attendance data with month names instead of numbers
+// Update attendance data without saving absent roll numbers
 app.post('/update-attendance', (req, res) => {
   const { year, month, day, attendance } = req.body;
 
@@ -85,24 +100,15 @@ app.post('/update-attendance', (req, res) => {
     data[0] = {};
   }
 
-  // Initialize the year, month, and day if they don't exist
+  // Initialize the year, month (as month name), and day if they don't exist
   if (!data[0][year]) data[0][year] = {};
-  if (!data[0][year][monthNumber]) data[0][year][monthNumber] = {};
-  if (!data[0][year][monthNumber][day]) data[0][year][monthNumber][day] = {};
+  const monthName = monthNumberToName(monthNumber);  // Get the month name
+  if (!data[0][year][monthName]) data[0][year][monthName] = {};
+  if (!data[0][year][monthName][day]) data[0][year][monthName][day] = {};
 
   // Mark attendance for roll numbers in the "attendance" array
   attendance.forEach(rollNo => {
-    data[0][year][monthNumber][day][rollNo] = 'present';  // Mark the rollNo as present
-  });
-
-  // Assuming all other roll numbers are absent
-  const members = readJSON(membersPath, []);
-  const rollNumbers = members.map(member => member.rollNo);
-
-  rollNumbers.forEach(rollNo => {
-    if (!attendance.includes(rollNo)) {
-      data[0][year][monthNumber][day][rollNo] = 'absent'; // Mark the rollNo as absent if not in attendance
-    }
+    data[0][year][monthName][day][rollNo] = 'present';  // Mark the rollNo as present
   });
 
   // Write the updated attendance data
@@ -110,7 +116,6 @@ app.post('/update-attendance', (req, res) => {
 
   res.json({ success: true, message: 'Attendance updated successfully' });
 });
-
 
 
 // Get donations data

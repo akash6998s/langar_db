@@ -6,7 +6,18 @@ const cors = require('cors');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors());
+// CORS setup for live environment
+const allowedOrigins = ['https://your-frontend-url.com', 'https://langar-db-csvv.onrender.com']; // Add your live front-end URL
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  }
+}));
+
 app.use(express.json());
 
 // File paths for storing data
@@ -35,7 +46,6 @@ const writeJSON = (filePath, data) => {
 app.get("/", (req, res) => {
   res.send("🎉 Langar Sewa API is Live");
 });
-
 
 // Get member details
 app.get('/member-full-details', (req, res) => {
@@ -79,7 +89,6 @@ const monthNumberToName = (monthNumber) => {
 };
 
 // Update attendance data with month names instead of numbers
-// Update attendance data without saving absent roll numbers
 app.post('/update-attendance', (req, res) => {
   const { year, month, day, attendance } = req.body;
 
@@ -116,7 +125,6 @@ app.post('/update-attendance', (req, res) => {
 
   res.json({ success: true, message: 'Attendance updated successfully' });
 });
-
 
 // Get donations data
 app.get('/donations', (req, res) => {
@@ -155,7 +163,6 @@ app.post('/update-donations', (req, res) => {
 });
 
 // Add expense data
-// Add expense data
 app.post('/add-expense', (req, res) => {
   const { amount, description, month, year } = req.body;
 
@@ -178,7 +185,6 @@ app.post('/add-expense', (req, res) => {
 
   res.json({ success: true, message: 'Expense added successfully' });
 });
-
 
 // Get the financial summary for this month
 app.get('/financial-summary', (req, res) => {
