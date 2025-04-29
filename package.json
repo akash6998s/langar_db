@@ -1,11 +1,18 @@
 {
   "dependencies": {
+    "axios": "^1.9.0",
     "body-parser": "^2.2.0",
     "cors": "^2.8.5",
     "express": "^5.1.0",
     "sqlite3": "^5.1.7"
   },
   "scripts": {
-    "start": "node server.js"
+  "start-server": "node server.js",
+  "keep-alive": "node keepAlive.js",
+  "dev": "concurrently \"npm run start-server\" \"npm run keep-alive\""
+}
+,
+  "devDependencies": {
+    "concurrently": "^9.1.2"
   }
 }
