@@ -4,7 +4,7 @@ const path = require('path');
 const cors = require('cors');
 
 const app = express();
-const PORT = "https://langar-db-csvv.onrender.com";
+const PORT = process.env.PORT || 5000;
 
 // CORS setup for live environment
 const allowedOrigins = ['fancy-cat-e57b88.netlify.app', 'https://langar-db-csvv.onrender.com']; // Add your live front-end URL
