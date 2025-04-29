@@ -1,68 +1,70 @@
-{{
-  "0": {
-    "2025": {
-      "4": [
-        {
-          "amount": 100,
-          "description": "yugyi"
-        },
-        {
-          "amount": 0,
-          "description": "test"
-        }
-      ],
-      "april": [
-        {
-          "amount": 150,
-          "description": "Langar food supplies"
-        },
-        {
-          "amount": 1000,
-          "description": "Langar food supplies"
-        }
-      ],
-      "May": [
-        {
-          "amount": 500,
-          "description": "Milk for langar"
-        }
-      ],
-      "January": [
-        {
-          "amount": 500,
-          "description": "Milk for langar"
-        }
-      ],
-      "April": [
-        {
-          "amount": 51,
-          "description": "test2"
-        },
-        {
-          "amount": 100,
-          "description": "fdfd"
-        },
-        {
-          "amount": 100,
-          "description": "ty"
-        }
-      ]
-    },
-    "2026": {
-      "January": [
-        {
-          "amount": 500,
-          "description": "test3"
-        }
-      ]
-    },
-    "2029": {
-      "January": [
-        {
-          "amount": 1000,
-          "description": "test3"
-        }
-      ]
+[
+  {
+    "0": {
+      "2025": {
+        "4": [
+          {
+            "amount": 100,
+            "description": "yugyi"
+          },
+          {
+            "amount": 0,
+            "description": "test"
+          }
+        ],
+        "april": [
+          {
+            "amount": 150,
+            "description": "Langar food supplies"
+          },
+          {
+            "amount": 1000,
+            "description": "Langar food supplies"
+          }
+        ],
+        "May": [
+          {
+            "amount": 500,
+            "description": "Milk for langar"
+          }
+        ],
+        "January": [
+          {
+            "amount": 500,
+            "description": "Milk for langar"
+          }
+        ],
+        "April": [
+          {
+            "amount": 51,
+            "description": "test2"
+          },
+          {
+            "amount": 100,
+            "description": "fdfd"
+          },
+          {
+            "amount": 100,
+            "description": "ty"
+          }
+        ]
+      },
+      "2026": {
+        "January": [
+          {
+            "amount": 500,
+            "description": "test3"
+          }
+        ]
+      },
+      "2029": {
+        "January": [
+          {
+            "amount": 1000,
+            "description": "test3"
+          }
+        ]
+      }
     }
   }
-}}
+]
