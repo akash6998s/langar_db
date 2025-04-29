@@ -1,37 +1,42 @@
-const express = require('express');
-const fs = require('fs');
-const path = require('path');
-const cors = require('cors');
+const express = require("express");
+const fs = require("fs");
+const path = require("path");
+const cors = require("cors");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 // CORS setup for live environment
-const allowedOrigins = ['https://fancy-cat-e57b88.netlify.app', 'https://langar-db-csvv.onrender.com', 'http://localhost:5000'];
+const allowedOrigins = [
+  "https://fancy-cat-e57b88.netlify.app",
+  "https://langar-db-csvv.onrender.com",
+  "http://localhost:5000",
+  "http://localhost:3000",
+];
 const corsOptions = {
   origin: function (origin, callback) {
     // allow requests with no origin (like mobile apps or curl)
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      callback(new Error("Not allowed by CORS"));
     }
-  }
+  },
 };
 
 app.use(cors(corsOptions));
 
 // File paths for storing data
-const attendancePath = path.join(__dirname, 'data', 'attendance.json');
-const membersPath = path.join(__dirname, 'data', 'members.json');
-const donationPath = path.join(__dirname, 'data', 'donations.json');
-const expensesPath = path.join(__dirname, 'data', 'expenses.json');
+const attendancePath = path.join(__dirname, "data", "attendance.json");
+const membersPath = path.join(__dirname, "data", "members.json");
+const donationPath = path.join(__dirname, "data", "donations.json");
+const expensesPath = path.join(__dirname, "data", "expenses.json");
 
 // Helper functions
 const readJSON = (filePath, defaultValue) => {
   if (!fs.existsSync(filePath)) return defaultValue;
   try {
-    const data = fs.readFileSync(filePath, 'utf-8');
+    const data = fs.readFileSync(filePath, "utf-8");
     return JSON.parse(data);
   } catch (err) {
     return defaultValue;
@@ -49,13 +54,13 @@ app.get("/", (req, res) => {
 });
 
 // Get member details
-app.get('/member-full-details', (req, res) => {
+app.get("/member-full-details", (req, res) => {
   const members = readJSON(membersPath, []);
   res.json(members);
 });
 
 // Get attendance data
-app.get('/attendance', (req, res) => {
+app.get("/attendance", (req, res) => {
   const attendance = readJSON(attendancePath, []);
   res.json(attendance);
 });
@@ -77,74 +82,84 @@ const monthNameToNumber = (monthName) => {
     December: 12,
   };
 
-  return monthMap[monthName] || null;  // Return null if invalid month name
+  return monthMap[monthName] || null; // Return null if invalid month name
 };
 
 // Helper function to convert month number to month name
 const monthNumberToName = (monthNumber) => {
   const monthNames = [
-    "January", "February", "March", "April", "May", "June", "July", "August", 
-    "September", "October", "November", "December"
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
   ];
   return monthNames[monthNumber - 1] || null;
 };
 
 // Update attendance data with month names instead of numbers
-app.post('/update-attendance', (req, res) => {
+app.post("/update-attendance", (req, res) => {
   const { year, month, day, attendance } = req.body;
 
   if (!year || !month || !day || !Array.isArray(attendance)) {
-    return res.status(400).json({ error: 'Missing or invalid data' });
+    return res.status(400).json({ error: "Missing or invalid data" });
   }
 
   // Convert month name to number
   const monthNumber = monthNameToNumber(month);
   if (!monthNumber) {
-    return res.status(400).json({ error: 'Invalid month name' });
+    return res.status(400).json({ error: "Invalid month name" });
   }
 
   // Read the current attendance data
   let data = readJSON(attendancePath, [{}]);
 
-  if (typeof data[0] !== 'object' || Array.isArray(data[0])) {
+  if (typeof data[0] !== "object" || Array.isArray(data[0])) {
     data[0] = {};
   }
 
   // Initialize the year, month (as month name), and day if they don't exist
   if (!data[0][year]) data[0][year] = {};
-  const monthName = monthNumberToName(monthNumber);  // Get the month name
+  const monthName = monthNumberToName(monthNumber); // Get the month name
   if (!data[0][year][monthName]) data[0][year][monthName] = {};
   if (!data[0][year][monthName][day]) data[0][year][monthName][day] = {};
 
   // Mark attendance for roll numbers in the "attendance" array
-  attendance.forEach(rollNo => {
-    data[0][year][monthName][day][rollNo] = 'present';  // Mark the rollNo as present
+  attendance.forEach((rollNo) => {
+    data[0][year][monthName][day][rollNo] = "present"; // Mark the rollNo as present
   });
 
   // Write the updated attendance data
   writeJSON(attendancePath, data);
 
-  res.json({ success: true, message: 'Attendance updated successfully' });
+  res.json({ success: true, message: "Attendance updated successfully" });
 });
 
 // Get donations data
-app.get('/donations', (req, res) => {
+app.get("/donations", (req, res) => {
   const donations = readJSON(donationPath, []);
   res.json(donations);
 });
 
 // Get all expense details
-app.get('/expenses', (req, res) => {
+app.get("/expenses", (req, res) => {
   const expenses = readJSON(expensesPath, []);
   res.json(expenses);
 });
 
 // Update donations data
-app.post('/update-donations', (req, res) => {
+app.post("/update-donations", (req, res) => {
   const { year, month, rollNo, amount } = req.body;
 
-  if (!year || !month || !rollNo || typeof amount !== 'number') {
-    return res.status(400).json({ error: 'Missing or invalid data' });
+  if (!year || !month || !rollNo || typeof amount !== "number") {
+    return res.status(400).json({ error: "Missing or invalid data" });
   }
 
   let data = readJSON(donationPath, {});
@@ -160,20 +175,31 @@ app.post('/update-donations', (req, res) => {
 
   writeJSON(donationPath, data);
 
-  res.json({ success: true, message: 'Donation updated successfully' });
+  res.json({ success: true, message: "Donation updated successfully" });
 });
 
 // Add expense data
-app.post('/add-expense', (req, res) => {
+app.post("/add-expense", (req, res) => {
   const { amount, description, month, year } = req.body;
 
-  if (amount === undefined || typeof amount !== 'number' || !description || !month || !year) {
-    return res.status(400).json({ error: 'Missing or invalid data. Please ensure all fields are provided correctly.' });
+  if (
+    amount === undefined ||
+    typeof amount !== "number" ||
+    !description ||
+    !month ||
+    !year
+  ) {
+    return res
+      .status(400)
+      .json({
+        error:
+          "Missing or invalid data. Please ensure all fields are provided correctly.",
+      });
   }
 
   let data = readJSON(expensesPath, []);
 
-  if (typeof data[0] !== 'object' || Array.isArray(data[0])) {
+  if (typeof data[0] !== "object" || Array.isArray(data[0])) {
     data[0] = {};
   }
 
@@ -184,11 +210,11 @@ app.post('/add-expense', (req, res) => {
 
   writeJSON(expensesPath, data);
 
-  res.json({ success: true, message: 'Expense added successfully' });
+  res.json({ success: true, message: "Expense added successfully" });
 });
 
 // Get the financial summary for this month
-app.get('/financial-summary', (req, res) => {
+app.get("/financial-summary", (req, res) => {
   const currentDate = new Date();
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth() + 1;
@@ -196,18 +222,29 @@ app.get('/financial-summary', (req, res) => {
   const donations = readJSON(donationPath, [{}]);
   const expenses = readJSON(expensesPath, [{}]);
 
-  const thisMonthDonations = donations[0][year] && donations[0][year][month] 
-    ? Object.values(donations[0][year][month]).reduce((acc, curr) => acc + curr, 0)
-    : 0;
+  const thisMonthDonations =
+    donations[0][year] && donations[0][year][month]
+      ? Object.values(donations[0][year][month]).reduce(
+          (acc, curr) => acc + curr,
+          0
+        )
+      : 0;
 
-  const thisMonthExpenses = expenses[0][year] && expenses[0][year][month] 
-    ? expenses[0][year][month].reduce((acc, expense) => acc + expense.amount, 0)
-    : 0;
+  const thisMonthExpenses =
+    expenses[0][year] && expenses[0][year][month]
+      ? expenses[0][year][month].reduce(
+          (acc, expense) => acc + expense.amount,
+          0
+        )
+      : 0;
 
   let totalExpensesBeforeMonth = 0;
   for (let m = 1; m < month; m++) {
     if (expenses[0][year] && expenses[0][year][m]) {
-      totalExpensesBeforeMonth += expenses[0][year][m].reduce((acc, expense) => acc + expense.amount, 0);
+      totalExpensesBeforeMonth += expenses[0][year][m].reduce(
+        (acc, expense) => acc + expense.amount,
+        0
+      );
     }
   }
 
@@ -225,7 +262,7 @@ app.get('/financial-summary', (req, res) => {
 });
 
 // ✅ NEW: Overall summary (total till date)
-app.get('/overall-summary', (req, res) => {
+app.get("/overall-summary", (req, res) => {
   const donations = readJSON(donationPath, {});
   const expenses = readJSON(expensesPath, []);
 
@@ -243,7 +280,10 @@ app.get('/overall-summary', (req, res) => {
   if (expenses[0]) {
     for (const year in expenses[0]) {
       for (const month in expenses[0][year]) {
-        totalExpenses += expenses[0][year][month].reduce((sum, expense) => sum + expense.amount, 0);
+        totalExpenses += expenses[0][year][month].reduce(
+          (sum, expense) => sum + expense.amount,
+          0
+        );
       }
     }
   }
@@ -255,8 +295,8 @@ app.get('/overall-summary', (req, res) => {
     data: {
       totalDonations,
       totalExpenses,
-      netAmount
-    }
+      netAmount,
+    },
   });
 });
 
