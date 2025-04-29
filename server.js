@@ -8,17 +8,18 @@ const PORT = process.env.PORT || 5000;
 
 // CORS setup for live environment
 const allowedOrigins = ['https://fancy-cat-e57b88.netlify.app', 'https://langar-db-csvv.onrender.com'];
-app.use(cors({
+const corsOptions = {
   origin: function (origin, callback) {
-    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+    // allow requests with no origin (like mobile apps or curl)
+    if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
     }
   }
-}));
+};
 
-app.use(express.json());
+app.use(cors(corsOptions));
 
 // File paths for storing data
 const attendancePath = path.join(__dirname, 'data', 'attendance.json');
