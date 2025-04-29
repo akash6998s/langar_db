@@ -22,7 +22,7 @@ app.use(express.json());
 
 // File paths for storing data
 const attendancePath = path.join(__dirname, 'data', 'attendance.json');
-const membersPath = path.join(__dirname, 'data', 'attendance.json');
+const membersPath = path.join(__dirname, 'data', 'members.json');
 const donationPath = path.join(__dirname, 'data', 'donations.json');
 const expensesPath = path.join(__dirname, 'data', 'expenses.json');
 
