@@ -4,7 +4,7 @@ const path = require('path');
 const cors = require('cors');
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = "https://langar-db-csvv.onrender.com";
 
 // CORS setup for live environment
 const allowedOrigins = ['fancy-cat-e57b88.netlify.app', 'https://langar-db-csvv.onrender.com']; // Add your live front-end URL
@@ -128,13 +128,13 @@ app.post('/update-attendance', (req, res) => {
 
 // Get donations data
 app.get('/donations', (req, res) => {
-  const donations = readJSON(donationPath, [{}]);
+  const donations = readJSON(donationPath, []);
   res.json(donations);
 });
 
 // Get all expense details
 app.get('/expenses', (req, res) => {
-  const expenses = readJSON(expensesPath, [{}]);
+  const expenses = readJSON(expensesPath, []);
   res.json(expenses);
 });
 
@@ -226,7 +226,7 @@ app.get('/financial-summary', (req, res) => {
 // ✅ NEW: Overall summary (total till date)
 app.get('/overall-summary', (req, res) => {
   const donations = readJSON(donationPath, {});
-  const expenses = readJSON(expensesPath, [{}]);
+  const expenses = readJSON(expensesPath, []);
 
   let totalDonations = 0;
   let totalExpenses = 0;
