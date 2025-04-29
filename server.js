@@ -43,18 +43,18 @@ const writeJSON = (filePath, data) => {
 
 // Routes
 
-app.get("/", (req, res) => {
+app.get("https://langar-db-csvv.onrender.com/", (req, res) => {
   res.send("🎉 Langar Sewa API is Live");
 });
 
 // Get member details
-app.get('/member-full-details', (req, res) => {
+app.get('https://langar-db-csvv.onrender.com/member-full-details', (req, res) => {
   const members = readJSON(membersPath, []);
   res.json(members);
 });
 
 // Get attendance data
-app.get('/attendance', (req, res) => {
+app.get('https://langar-db-csvv.onrender.com/attendance', (req, res) => {
   const attendance = readJSON(attendancePath, [{}]);
   res.json(attendance);
 });
@@ -89,7 +89,7 @@ const monthNumberToName = (monthNumber) => {
 };
 
 // Update attendance data with month names instead of numbers
-app.post('/update-attendance', (req, res) => {
+app.post('https://langar-db-csvv.onrender.com/update-attendance', (req, res) => {
   const { year, month, day, attendance } = req.body;
 
   if (!year || !month || !day || !Array.isArray(attendance)) {
@@ -127,19 +127,19 @@ app.post('/update-attendance', (req, res) => {
 });
 
 // Get donations data
-app.get('/donations', (req, res) => {
+app.get('https://langar-db-csvv.onrender.com/donations', (req, res) => {
   const donations = readJSON(donationPath, [{}]);
   res.json(donations);
 });
 
 // Get all expense details
-app.get('/expenses', (req, res) => {
+app.get('https://langar-db-csvv.onrender.com/expenses', (req, res) => {
   const expenses = readJSON(expensesPath, [{}]);
   res.json(expenses);
 });
 
 // Update donations data
-app.post('/update-donations', (req, res) => {
+app.post('https://langar-db-csvv.onrender.com/update-donations', (req, res) => {
   const { year, month, rollNo, amount } = req.body;
 
   if (!year || !month || !rollNo || typeof amount !== 'number') {
@@ -163,7 +163,7 @@ app.post('/update-donations', (req, res) => {
 });
 
 // Add expense data
-app.post('/add-expense', (req, res) => {
+app.post('https://langar-db-csvv.onrender.com/add-expense', (req, res) => {
   const { amount, description, month, year } = req.body;
 
   if (amount === undefined || typeof amount !== 'number' || !description || !month || !year) {
@@ -187,7 +187,7 @@ app.post('/add-expense', (req, res) => {
 });
 
 // Get the financial summary for this month
-app.get('/financial-summary', (req, res) => {
+app.get('https://langar-db-csvv.onrender.com/financial-summary', (req, res) => {
   const currentDate = new Date();
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth() + 1;
@@ -224,7 +224,7 @@ app.get('/financial-summary', (req, res) => {
 });
 
 // ✅ NEW: Overall summary (total till date)
-app.get('/overall-summary', (req, res) => {
+app.get('https://langar-db-csvv.onrender.com/overall-summary', (req, res) => {
   const donations = readJSON(donationPath, {});
   const expenses = readJSON(expensesPath, [{}]);
 
