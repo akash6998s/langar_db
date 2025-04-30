@@ -25,6 +25,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+app.use(express.json());
 
 // File paths for storing data
 const attendancePath = path.join(__dirname, "data", "attendance.json");
@@ -48,10 +49,6 @@ const writeJSON = (filePath, data) => {
 };
 
 // Routes
-
-app.get("/", (req, res) => {
-  res.send("🎉 Langar Sewa API is Live");
-});
 
 // Get member details
 app.get("/member-full-details", (req, res) => {
@@ -156,27 +153,35 @@ app.get("/expenses", (req, res) => {
 
 // Update donations data
 app.post("/update-donations", (req, res) => {
-  const { year, month, rollNo, amount } = req.body;
+  const { year, month, rollNo } = req.body;
+  const amount = Number(req.body.amount); // Parse amount to number
 
-  if (!year || !month || !rollNo || typeof amount !== "number") {
+  // Validate input
+  if (!year || !month || !rollNo || isNaN(amount)) {
     return res.status(400).json({ error: "Missing or invalid data" });
   }
 
+  // Read existing donation data
   let data = readJSON(donationPath, {});
 
+  // Initialize nested objects if not present
   if (!data[year]) data[year] = {};
   if (!data[year][month]) data[year][month] = {};
 
-  if (!data[year][month][rollNo]) {
+  // Initialize donation amount for rollNo if not present
+  if (typeof data[year][month][rollNo] !== "number") {
     data[year][month][rollNo] = 0;
   }
 
+  // Add the new amount to the existing amount
   data[year][month][rollNo] += amount;
 
+  // Save updated data
   writeJSON(donationPath, data);
 
   res.json({ success: true, message: "Donation updated successfully" });
 });
+
 
 // Add expense data
 app.post("/add-expense", (req, res) => {
@@ -264,24 +269,27 @@ app.get("/financial-summary", (req, res) => {
 // ✅ NEW: Overall summary (total till date)
 app.get("/overall-summary", (req, res) => {
   const donations = readJSON(donationPath, {});
-  const expenses = readJSON(expensesPath, []);
+  const expensesData = readJSON(expensesPath, []);
 
   let totalDonations = 0;
   let totalExpenses = 0;
 
+  // Sum all donations
   for (const year in donations) {
     for (const month in donations[year]) {
       for (const rollNo in donations[year][month]) {
-        totalDonations += donations[year][month][rollNo];
+        totalDonations += Number(donations[year][month][rollNo] || 0);
       }
     }
   }
 
-  if (expenses[0]) {
-    for (const year in expenses[0]) {
-      for (const month in expenses[0][year]) {
-        totalExpenses += expenses[0][year][month].reduce(
-          (sum, expense) => sum + expense.amount,
+  // Sum all expenses
+  if (expensesData.length > 0) {
+    const expenses = expensesData[0];
+    for (const year in expenses) {
+      for (const month in expenses[year]) {
+        totalExpenses += expenses[year][month].reduce(
+          (sum, exp) => sum + Number(exp.amount || 0),
           0
         );
       }
@@ -299,6 +307,7 @@ app.get("/overall-summary", (req, res) => {
     },
   });
 });
+
 
 // Start server
 app.listen(PORT, () => {
