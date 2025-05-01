@@ -139,6 +139,49 @@ app.post("/update-attendance", (req, res) => {
   res.json({ success: true, message: "Attendance updated successfully" });
 });
 
+app.post("/delete-attendance", (req, res) => {
+  const { year, month, day, attendance } = req.body;
+
+  // Validate input
+  if (!year || !month || !day || !Array.isArray(attendance)) {
+    return res.status(400).json({ error: "Missing or invalid fields" });
+  }
+
+  const monthNumber = monthNameToNumber(month);
+  if (!monthNumber) {
+    return res.status(400).json({ error: "Invalid month name" });
+  }
+
+  let data = readJSON(attendancePath, [{}]);
+
+  const dateAttendance = data[0]?.[year]?.[month]?.[String(day)];
+  if (!dateAttendance) {
+    return res.status(404).json({ error: "No attendance data found for that date" });
+  }
+
+  let deleted = [];
+
+  attendance.forEach((rollNo) => {
+    if (dateAttendance[rollNo]) {
+      delete dateAttendance[rollNo];
+      deleted.push(rollNo);
+    }
+  });
+
+  if (deleted.length === 0) {
+    return res.status(404).json({ error: "None of the selected roll numbers were found in attendance data." });
+  }
+
+  writeJSON(attendancePath, data);
+
+  return res.json({
+    success: true,
+    deleted,
+    message: `Attendance Deleted`,
+  });
+});
+
+
 // Get donations data
 app.get("/donations", (req, res) => {
   const donations = readJSON(donationPath, []);
