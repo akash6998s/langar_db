@@ -156,7 +156,9 @@ app.post("/delete-attendance", (req, res) => {
 
   const dateAttendance = data[0]?.[year]?.[month]?.[String(day)];
   if (!dateAttendance) {
-    return res.status(404).json({ error: "No attendance data found for that date" });
+    return res
+      .status(404)
+      .json({ error: "No attendance data found for that date" });
   }
 
   let deleted = [];
@@ -169,7 +171,9 @@ app.post("/delete-attendance", (req, res) => {
   });
 
   if (deleted.length === 0) {
-    return res.status(404).json({ error: "None of the selected roll numbers were found in attendance data." });
+    return res.status(404).json({
+      error: "None of the selected roll numbers were found in attendance data.",
+    });
   }
 
   writeJSON(attendancePath, data);
@@ -180,7 +184,6 @@ app.post("/delete-attendance", (req, res) => {
     message: `Attendance Deleted`,
   });
 });
-
 
 // Get donations data
 app.get("/donations", (req, res) => {
@@ -225,7 +228,6 @@ app.post("/update-donations", (req, res) => {
   res.json({ success: true, message: "Donation updated successfully" });
 });
 
-
 // Add expense data
 app.post("/add-expense", (req, res) => {
   const { amount, description, month, year } = req.body;
@@ -237,12 +239,10 @@ app.post("/add-expense", (req, res) => {
     !month ||
     !year
   ) {
-    return res
-      .status(400)
-      .json({
-        error:
-          "Missing or invalid data. Please ensure all fields are provided correctly.",
-      });
+    return res.status(400).json({
+      error:
+        "Missing or invalid data. Please ensure all fields are provided correctly.",
+    });
   }
 
   let data = readJSON(expensesPath, []);
@@ -261,53 +261,157 @@ app.post("/add-expense", (req, res) => {
   res.json({ success: true, message: "Expense added successfully" });
 });
 
-// Get the financial summary for this month
-app.get("/financial-summary", (req, res) => {
-  const currentDate = new Date();
-  const year = currentDate.getFullYear();
-  const month = currentDate.getMonth() + 1;
+// Delete a member by roll number
+app.post("/delete-member", (req, res) => {
+  const { rollNo } = req.body;
+  if (!rollNo)
+    return res.status(400).json({ message: "Roll number is required." });
 
-  const donations = readJSON(donationPath, [{}]);
-  const expenses = readJSON(expensesPath, [{}]);
+  const members = readJSON(membersPath, []); // Use readJSON function
+  const donations = readJSON(donationPath, {}); // Ensure correct read from donationPath
+  const additionalPath = path.join(__dirname, "data", "additional.json");
+  const additional = fs.existsSync(additionalPath)
+    ? readJSON(additionalPath, {})
+    : {}; // Correct path for additional data
 
-  const thisMonthDonations =
-    donations[0][year] && donations[0][year][month]
-      ? Object.values(donations[0][year][month]).reduce(
-          (acc, curr) => acc + curr,
-          0
-        )
-      : 0;
+  const roll = parseInt(rollNo);
+  let member = members.find((m) => m.roll_no === roll);
+  if (!member) return res.status(404).json({ message: "Member not found." });
 
-  const thisMonthExpenses =
-    expenses[0][year] && expenses[0][year][month]
-      ? expenses[0][year][month].reduce(
-          (acc, expense) => acc + expense.amount,
-          0
-        )
-      : 0;
+  // Clear personal info
+  member.name = "";
+  member.last_name = "";
+  member.phone_no = "";
+  member.address = "";
 
-  let totalExpensesBeforeMonth = 0;
-  for (let m = 1; m < month; m++) {
-    if (expenses[0][year] && expenses[0][year][m]) {
-      totalExpensesBeforeMonth += expenses[0][year][m].reduce(
-        (acc, expense) => acc + expense.amount,
-        0
-      );
+  // Calculate total donation from this rollNo
+  let totalRemoved = 0;
+  for (let year in donations) {
+    for (let month in donations[year]) {
+      for (let roll in donations[year][month]) {
+        if (parseInt(roll) === rollNo) {
+          totalRemoved += donations[year][month][roll];
+          delete donations[year][month][roll];
+        }
+      }
     }
   }
 
-  const netAmount = thisMonthDonations - thisMonthExpenses;
+  // Update additional.json
+  additional.donatedRemoved = (additional.donatedRemoved || 0) + totalRemoved;
+
+  // Write updates
+  writeJSON(membersPath, members);
+  writeJSON(donationPath, donations);
+  writeJSON(additionalPath, additional);
 
   res.json({
-    success: true,
-    data: {
-      thisMonthDonations,
-      thisMonthExpenses,
-      totalExpensesBeforeMonth,
-      netAmount,
-    },
+    message: `Member removed. Total donation of ₹${totalRemoved} was added to removed record.`,
   });
 });
+
+// POST /add-member
+
+const membersFilePath = path.join(__dirname, "data/members.json");
+
+app.post("/add-member", (req, res) => {
+  const newMember = req.body;
+
+  if (!newMember.roll_no) {
+    return res.status(400).json({ message: "roll_no is required" });
+  }
+
+  try {
+    const membersData = JSON.parse(fs.readFileSync(membersFilePath, "utf-8"));
+
+    const existingIndex = membersData.findIndex(
+      (m) => String(m.roll_no) === String(newMember.roll_no)
+    );
+    
+
+    if (existingIndex !== -1) {
+      const existingMember = membersData[existingIndex];
+
+      if (existingMember.name && existingMember.name.trim() !== "") {
+        // Case: roll_no exists and name is NOT empty
+        return res
+          .status(409)
+          .json({ message: "Member with this roll number already exists" });
+      } else {
+        // Case: roll_no exists and name is empty — update the record
+        membersData[existingIndex] = { ...existingMember, ...newMember };
+        fs.writeFileSync(
+          membersFilePath,
+          JSON.stringify(membersData, null, 2),
+          "utf-8"
+        );
+        return res.status(200).json({
+          message: "Member details updated successfully",
+          member: membersData[existingIndex],
+        });
+      }
+    }
+
+    // New member — add to list
+    membersData.push(newMember);
+    fs.writeFileSync(
+      membersFilePath,
+      JSON.stringify(membersData, null, 2),
+      "utf-8"
+    );
+    res
+      .status(201)
+      .json({ message: "Member added successfully", member: newMember });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error reading or writing member data", error });
+  }
+});
+
+// POST /empty-rollno
+
+app.get('/empty-rollno', (req, res) => {
+  const filePath = path.join(__dirname, 'data/members.json');
+
+  fs.readFile(filePath, 'utf8', (err, data) => {
+    if (err) {
+      return res.status(500).json({ error: 'Failed to read members.json' });
+    }
+
+    try {
+      const members = JSON.parse(data);
+
+      // Filter members with empty name and get their roll numbers
+      const emptyNameRollNumbers = members
+        .filter(member => member.name === "")
+        .map(member => member.roll_no);
+
+      // Get the total number of members + 1 (next roll number)
+      const nextRollNo = members.length + 1;
+
+      // Combine both arrays: empty roll numbers and total member count + 1
+      const response = [
+        ...emptyNameRollNumbers,
+        nextRollNo
+      ];
+
+      res.json(response);
+    } catch (parseErr) {
+      res.status(500).json({ error: 'Error parsing JSON file' });
+    }
+  });
+});
+
+// Get additional data
+app.get("/additional", (req, res) => {
+  const additionalPath = path.join(__dirname, "data", "additional.json");
+
+  // Read and return the additional data
+  const additionalData = readJSON(additionalPath, {});
+  res.json(additionalData);
+});
+
 
 // ✅ NEW: Overall summary (total till date)
 app.get("/overall-summary", (req, res) => {
@@ -350,7 +454,6 @@ app.get("/overall-summary", (req, res) => {
     },
   });
 });
-
 
 // Start server
 app.listen(PORT, () => {
