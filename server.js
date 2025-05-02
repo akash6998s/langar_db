@@ -275,7 +275,7 @@ app.post("/delete-member", (req, res) => {
     : {}; // Correct path for additional data
 
   const roll = parseInt(rollNo);
-  let member = members.find((m) => m.roll_no === roll);
+  let member = members.find((m) => parseInt(m.roll_no) === roll);
   if (!member) return res.status(404).json({ message: "Member not found." });
 
   // Clear personal info
