@@ -199,34 +199,41 @@ app.get("/expenses", (req, res) => {
 
 // Update donations data
 app.post("/update-donations", (req, res) => {
-  const { year, month, rollNo } = req.body;
-  const amount = Number(req.body.amount); // Parse amount to number
+  const { year, month, rollNo, type } = req.body;
+  const amount = Number(req.body.amount);
 
   // Validate input
-  if (!year || !month || !rollNo || isNaN(amount)) {
+  if (!year || !month || !rollNo || isNaN(amount) || !type) {
     return res.status(400).json({ error: "Missing or invalid data" });
   }
 
-  // Read existing donation data
-  let data = readJSON(donationPath, {});
-
-  // Initialize nested objects if not present
-  if (!data[year]) data[year] = {};
-  if (!data[year][month]) data[year][month] = {};
-
-  // Initialize donation amount for rollNo if not present
-  if (typeof data[year][month][rollNo] !== "number") {
-    data[year][month][rollNo] = 0;
+  // Only allow 'donation' or 'fine'
+  if (type !== "donation" && type !== "fine") {
+    return res.status(400).json({ error: "Invalid type. Must be 'donation' or 'fine'" });
   }
 
-  // Add the new amount to the existing amount
-  data[year][month][rollNo] += amount;
+  // Read existing data
+  let data = readJSON(donationPath, {});
 
-  // Save updated data
+  // Initialize nested structure
+  if (!data[year]) data[year] = {};
+  if (!data[year][month]) data[year][month] = {};
+  if (!data[year][month][rollNo]) data[year][month][rollNo] = { donation: 0, fine: 0 };
+
+  // Ensure both keys exist
+  if (typeof data[year][month][rollNo][type] !== "number") {
+    data[year][month][rollNo][type] = 0;
+  }
+
+  // Add to existing amount
+  data[year][month][rollNo][type] += amount;
+
+  // Write back to file
   writeJSON(donationPath, data);
 
-  res.json({ success: true, message: "Donation updated successfully" });
+  res.json({ success: true, message: `${type} updated successfully` });
 });
+
 
 // Add expense data
 app.post("/add-expense", (req, res) => {
@@ -419,13 +426,25 @@ app.get("/overall-summary", (req, res) => {
   const expensesData = readJSON(expensesPath, []);
 
   let totalDonations = 0;
+  let totalFines = 0; // Added a variable for total fines
   let totalExpenses = 0;
 
-  // Sum all donations
+  // Sum all donations and fines
   for (const year in donations) {
     for (const month in donations[year]) {
       for (const rollNo in donations[year][month]) {
-        totalDonations += Number(donations[year][month][rollNo] || 0);
+        const value = donations[year][month][rollNo];
+        
+        if (typeof value === "number") {
+          totalDonations += value; // If the value is a number, add it to donations
+        } else if (typeof value === "object" && value !== null) {
+          if ("donation" in value) {
+            totalDonations += Number(value.donation || 0); // Add donation if present
+          }
+          if ("fine" in value) {
+            totalFines += Number(value.fine || 0); // Add fine if present
+          }
+        }
       }
     }
   }
@@ -443,17 +462,20 @@ app.get("/overall-summary", (req, res) => {
     }
   }
 
-  const netAmount = totalDonations - totalExpenses;
+  const netAmount = totalDonations + totalFines - totalExpenses;
 
   res.json({
     success: true,
     data: {
-      totalDonations,
+      totalDonations,  // This now includes donations and fines
+      totalFines,      // Returning total fines separately
       totalExpenses,
       netAmount,
     },
   });
 });
+
+
 
 // Start server
 app.listen(PORT, () => {

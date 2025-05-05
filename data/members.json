@@ -782,13 +782,5 @@
     "phone_no": "",
     "address": "",
     "isAdmin": false
-  },
-  {
-    "roll_no": "99",
-    "name": "",
-    "last_name": "",
-    "phone_no": "",
-    "address": "",
-    "isAdmin": false
   }
 ]
