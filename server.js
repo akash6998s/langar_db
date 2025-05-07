@@ -13,6 +13,7 @@ const allowedOrigins = [
   "https://langar-db-csvv.onrender.com",
   "http://localhost:5000",
   "http://localhost:3000",
+  "https://timely-pegasus-f577f8.netlify.app"
 ];
 const corsOptions = {
   origin: function (origin, callback) {
