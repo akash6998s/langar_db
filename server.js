@@ -1,11 +1,40 @@
 const express = require("express");
 const fs = require("fs");
-const multer = require("multer");
+const multer = require('multer');
 const path = require("path");
 const cors = require("cors");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+
+
+// Set up multer storage configuration
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, path.join(__dirname, 'data/uploads')); // Save to 'data/uploads' folder
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname)); // Rename file to avoid conflicts
+  }
+});
+
+const upload = multer({ storage: storage });
+
+// Route to handle file upload
+app.post('/upload', upload.single('image'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).send('No file uploaded');
+  }
+  res.send({ message: 'File uploaded successfully', file: req.file });
+});
+
+
+
+
+
+
+
 
 // CORS setup for live environment
 const allowedOrigins = [
@@ -56,18 +85,18 @@ if (!fs.existsSync(uploadPath)) {
   fs.mkdirSync(uploadPath, { recursive: true });
 }
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadPath);
-  },
-  filename: (req, file, cb) => {
-    const rollNo = req.body.roll_no;
-    const ext = path.extname(file.originalname); // e.g., .jpg, .png
-    cb(null, `${rollNo}${ext}`);
-  },
-});
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     cb(null, uploadPath);
+//   },
+//   filename: (req, file, cb) => {
+//     const rollNo = req.body.roll_no;
+//     const ext = path.extname(file.originalname); // e.g., .jpg, .png
+//     cb(null, `${rollNo}${ext}`);
+//   },
+// });
 
-const upload = multer({ storage });
+// const upload = multer({ storage });
 
 app.use(express.json()); // For parsing application/json
 app.use(express.urlencoded({ extended: true }));
