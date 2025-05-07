@@ -15,6 +15,7 @@ const allowedOrigins = [
   "http://localhost:3000",
   "https://timely-pegasus-f577f8.netlify.app"
 ];
+
 const corsOptions = {
   origin: function (origin, callback) {
     // allow requests with no origin (like mobile apps or curl)

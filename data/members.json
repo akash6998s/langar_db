@@ -17,8 +17,9 @@
     "roll_no": 3,
     "name": "Vikas",
     "last_name": "Singh",
-    "phone_no": "",
-    "address": ""
+    "phone_no": "8010853551",
+    "address": "Ghaziabad ",
+    "img": "3.png"
   },
   {
     "roll_no": 4,
@@ -52,8 +53,9 @@
     "roll_no": 8,
     "name": "Akash",
     "last_name": "Singh",
-    "phone_no": "",
-    "address": ""
+    "phone_no": "9315729158",
+    "address": "Ghaziabad",
+    "img": "8.png"
   },
   {
     "roll_no": 9,
