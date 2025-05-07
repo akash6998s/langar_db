@@ -3,6 +3,7 @@ const fs = require("fs");
 const multer = require("multer");
 const path = require("path");
 const cors = require("cors");
+const archiver = require("archiver");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -73,6 +74,24 @@ app.use(express.json()); // For parsing application/json
 app.use(express.urlencoded({ extended: true }));
 
 // Routes
+
+app.get("/download-all-images", (req, res) => {
+  const uploadDir = path.join(__dirname, "data", "uploads");
+
+  if (!fs.existsSync(uploadDir)) {
+    return res.status(404).json({ error: "Upload directory not found." });
+  }
+
+  const zipFileName = "all-member-images.zip";
+  res.setHeader("Content-Disposition", `attachment; filename=${zipFileName}`);
+  res.setHeader("Content-Type", "application/zip");
+
+  const archive = archiver("zip", { zlib: { level: 9 } });
+  archive.pipe(res);
+
+  archive.directory(uploadDir, false); // false to avoid nesting folder in zip
+  archive.finalize();
+});
 
 // Get member details
 app.get("/member-full-details", (req, res) => {
