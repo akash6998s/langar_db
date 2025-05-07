@@ -347,55 +347,34 @@ app.post("/delete-member", (req, res) => {
 // POST /add-member
 
 app.post("/edit-member", upload.single("image"), (req, res) => {
-  const { roll_no, name, last_name, phone_no, address } = req.body;
+  const { roll_no, name, phone } = req.body;
 
   if (!roll_no) {
-    return res.status(400).json({ error: "Roll number is required" });
+    return res.status(400).json({ error: "Roll number is required." });
   }
 
-  const dataPath = path.join(__dirname, "data", "members.json");
-  let members = JSON.parse(fs.readFileSync(dataPath, "utf-8"));
+  let members = readJSON(membersPath, []);
 
-  const index = members.findIndex(
-    (m) => parseInt(m.roll_no) === parseInt(roll_no)
-  );
-
-  if (index === -1) {
-    // If member does not exist, add new member
-    const newMember = {
-      roll_no,
-      name: name || "",
-      last_name: last_name || "",
-      phone_no: phone_no || "",
-      address: address || "",
-      img: req.file ? req.file.filename : "",
-    };
-    members.push(newMember);
-
-    fs.writeFileSync(dataPath, JSON.stringify(members, null, 2));
-
-    return res.status(201).json({
-      success: true,
-      message: "New member added successfully",
-      member: newMember,
-    });
+  const memberIndex = members.findIndex((m) => m.roll_no === roll_no);
+  if (memberIndex === -1) {
+    return res.status(404).json({ error: "Member not found." });
   }
 
-  // If member exists, update their details
-  if (name) members[index].name = name;
-  if (last_name) members[index].last_name = last_name;
-  if (phone_no) members[index].phone_no = phone_no;
-  if (address) members[index].address = address;
-  if (req.file) members[index].img = req.file.filename;
+  // Update member fields
+  if (name) members[memberIndex].name = name;
+  if (phone) members[memberIndex].phone = phone;
 
-  fs.writeFileSync(dataPath, JSON.stringify(members, null, 2));
+  // If image is uploaded, set the image path
+  if (req.file) {
+    const ext = path.extname(req.file.originalname);
+    members[memberIndex].image = `/images/${roll_no}${ext}`;
+  }
 
-  res.json({
-    success: true,
-    message: "Member details updated successfully",
-    member: members[index],
-  });
+  writeJSON(membersPath, members);
+
+  res.json({ success: true, message: "Member updated successfully", member: members[memberIndex] });
 });
+
 
 app.get("/all-images", (req, res) => {
   fs.readdir(uploadPath, (err, files) => {
