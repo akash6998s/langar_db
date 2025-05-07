@@ -3,6 +3,7 @@ const fs = require("fs");
 const multer = require("multer");
 const path = require("path");
 const cors = require("cors");
+const archiver = require("archiver");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -15,7 +16,6 @@ const allowedOrigins = [
   "http://localhost:3000",
   "https://timely-pegasus-f577f8.netlify.app"
 ];
-
 const corsOptions = {
   origin: function (origin, callback) {
     // allow requests with no origin (like mobile apps or curl)
@@ -74,6 +74,24 @@ app.use(express.json()); // For parsing application/json
 app.use(express.urlencoded({ extended: true }));
 
 // Routes
+
+app.get("/download-all-images", (req, res) => {
+  const uploadDir = path.join(__dirname, "data", "uploads");
+
+  if (!fs.existsSync(uploadDir)) {
+    return res.status(404).json({ error: "Upload directory not found." });
+  }
+
+  const zipFileName = "all-member-images.zip";
+  res.setHeader("Content-Disposition", `attachment; filename=${zipFileName}`);
+  res.setHeader("Content-Type", "application/zip");
+
+  const archive = archiver("zip", { zlib: { level: 9 } });
+  archive.pipe(res);
+
+  archive.directory(uploadDir, false); // false to avoid nesting folder in zip
+  archive.finalize();
+});
 
 // Get member details
 app.get("/member-full-details", (req, res) => {
@@ -347,34 +365,55 @@ app.post("/delete-member", (req, res) => {
 // POST /add-member
 
 app.post("/edit-member", upload.single("image"), (req, res) => {
-  const { roll_no, name, phone } = req.body;
+  const { roll_no, name, last_name, phone_no, address } = req.body;
 
   if (!roll_no) {
-    return res.status(400).json({ error: "Roll number is required." });
+    return res.status(400).json({ error: "Roll number is required" });
   }
 
-  let members = readJSON(membersPath, []);
+  const dataPath = path.join(__dirname, "data", "members.json");
+  let members = JSON.parse(fs.readFileSync(dataPath, "utf-8"));
 
-  const memberIndex = members.findIndex((m) => m.roll_no === roll_no);
-  if (memberIndex === -1) {
-    return res.status(404).json({ error: "Member not found." });
+  const index = members.findIndex(
+    (m) => parseInt(m.roll_no) === parseInt(roll_no)
+  );
+
+  if (index === -1) {
+    // If member does not exist, add new member
+    const newMember = {
+      roll_no,
+      name: name || "",
+      last_name: last_name || "",
+      phone_no: phone_no || "",
+      address: address || "",
+      img: req.file ? req.file.filename : "",
+    };
+    members.push(newMember);
+
+    fs.writeFileSync(dataPath, JSON.stringify(members, null, 2));
+
+    return res.status(201).json({
+      success: true,
+      message: "New member added successfully",
+      member: newMember,
+    });
   }
 
-  // Update member fields
-  if (name) members[memberIndex].name = name;
-  if (phone) members[memberIndex].phone = phone;
+  // If member exists, update their details
+  if (name) members[index].name = name;
+  if (last_name) members[index].last_name = last_name;
+  if (phone_no) members[index].phone_no = phone_no;
+  if (address) members[index].address = address;
+  if (req.file) members[index].img = req.file.filename;
 
-  // If image is uploaded, set the image path
-  if (req.file) {
-    const ext = path.extname(req.file.originalname);
-    members[memberIndex].image = `/images/${roll_no}${ext}`;
-  }
+  fs.writeFileSync(dataPath, JSON.stringify(members, null, 2));
 
-  writeJSON(membersPath, members);
-
-  res.json({ success: true, message: "Member updated successfully", member: members[memberIndex] });
+  res.json({
+    success: true,
+    message: "Member details updated successfully",
+    member: members[index],
+  });
 });
-
 
 app.get("/all-images", (req, res) => {
   fs.readdir(uploadPath, (err, files) => {
