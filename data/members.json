@@ -1,17 +1,19 @@
 [
   {
     "roll_no": 1,
-    "name": "Deepak",
-    "last_name": "Pathak",
-    "phone_no": "",
-    "address": ""
+    "name": "Deepak ",
+    "last_name": "Pathak ",
+    "phone_no": "9818121311",
+    "address": "Faridabad ",
+    "img": "1.png"
   },
   {
     "roll_no": 2,
     "name": "Bijender",
     "last_name": "Yadav",
-    "phone_no": "",
-    "address": ""
+    "phone_no": "8860801938",
+    "address": "Faridabad ",
+    "img": "2.png"
   },
   {
     "roll_no": 3,
@@ -25,8 +27,9 @@
     "roll_no": 4,
     "name": "Jatin",
     "last_name": "",
-    "phone_no": "",
-    "address": ""
+    "phone_no": "7042520201",
+    "address": "Faridabad ",
+    "img": "4.png"
   },
   {
     "roll_no": 5,
