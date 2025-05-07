@@ -396,6 +396,22 @@ app.post("/edit-member", upload.single("image"), (req, res) => {
   });
 });
 
+app.get("/all-images", (req, res) => {
+  fs.readdir(uploadPath, (err, files) => {
+    if (err) {
+      return res.status(500).json({ error: "Unable to read upload directory" });
+    }
+
+    const fileUrls = files.map((file) => ({
+      name: file,
+      url: `/images/${file}`,
+    }));
+
+    res.json(fileUrls);
+  });
+});
+
+
 app.use("/uploads", express.static(path.join(__dirname, "data", "uploads")));
 
 // POST /empty-rollno
