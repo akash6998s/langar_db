@@ -71,8 +71,9 @@
     "roll_no": 10,
     "name": "Mayank",
     "last_name": "",
-    "phone_no": "",
-    "address": ""
+    "phone_no": "9013495745",
+    "address": "A-302 Gaur Global Village,crossings republic,Nh-24,Ghaziabad(U.P)201016",
+    "img": "10.png"
   },
   {
     "roll_no": 11,
@@ -127,8 +128,9 @@
     "roll_no": 18,
     "name": "Ravi",
     "last_name": "Sgm",
-    "phone_no": "",
-    "address": ""
+    "phone_no": "7011557728",
+    "address": "F-324 SGM Nagar Faridabad ",
+    "img": "18.png"
   },
   {
     "roll_no": 19,
@@ -631,8 +633,8 @@
     "roll_no": 90,
     "name": "Sunil",
     "last_name": "Kumar",
-    "phone_no": "",
-    "address": ""
+    "phone_no": "9999615095",
+    "address": "Faridabad "
   },
   {
     "roll_no": 91,
