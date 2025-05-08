@@ -372,7 +372,7 @@ app.post("/edit-member", upload.single("image"), (req, res) => {
   }
 
   const dataPath = path.join(__dirname, "data", "members.json");
-  let members = readJSON(dataPath, []);
+  let members = JSON.parse(fs.readFileSync(dataPath, "utf-8"));
 
   const index = members.findIndex(
     (m) => parseInt(m.roll_no) === parseInt(roll_no)
@@ -390,7 +390,7 @@ app.post("/edit-member", upload.single("image"), (req, res) => {
     };
     members.push(newMember);
 
-    writeJSON(dataPath, members);
+    fs.writeFileSync(dataPath, JSON.stringify(members, null, 2));
 
     return res.status(201).json({
       success: true,
@@ -404,21 +404,9 @@ app.post("/edit-member", upload.single("image"), (req, res) => {
   if (last_name) members[index].last_name = last_name;
   if (phone_no) members[index].phone_no = phone_no;
   if (address) members[index].address = address;
+  if (req.file) members[index].img = req.file.filename;
 
-  if (req.file) {
-    // Delete the old image file if it exists
-    const oldImage = members[index].img;
-    if (oldImage) {
-      const oldImagePath = path.join(uploadPath, oldImage);
-      if (fs.existsSync(oldImagePath)) {
-        fs.unlinkSync(oldImagePath);
-      }
-    }
-    // Assign the new image filename
-    members[index].img = req.file.filename;
-  }
-
-  writeJSON(dataPath, members);
+  fs.writeFileSync(dataPath, JSON.stringify(members, null, 2));
 
   res.json({
     success: true,
@@ -426,7 +414,6 @@ app.post("/edit-member", upload.single("image"), (req, res) => {
     member: members[index],
   });
 });
-
 
 app.get("/all-images", (req, res) => {
   fs.readdir(uploadPath, (err, files) => {
