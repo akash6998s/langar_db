@@ -4,7 +4,7 @@
     "name": "Deepak ",
     "last_name": "Pathak ",
     "phone_no": "9818121311",
-    "address": "Faridabad ",
+    "address": "Sector -30, Faridabad ",
     "img": "1.png"
   },
   {
@@ -35,15 +35,17 @@
     "roll_no": 5,
     "name": "Rohit",
     "last_name": "Goswami",
-    "phone_no": "",
-    "address": ""
+    "phone_no": "8744000938",
+    "address": "Samay pur road, Rajiv colony, Sector 56-A, ballabgarh, Faridabad - 121004",
+    "img": "5.png"
   },
   {
     "roll_no": 6,
     "name": "Ravi",
     "last_name": "Thakur",
-    "phone_no": "",
-    "address": ""
+    "phone_no": "7827733423",
+    "address": "Malook chand estate mata ka mandir Mewla maharajpur sec-46  ",
+    "img": "6.png"
   },
   {
     "roll_no": 7,
@@ -86,8 +88,9 @@
     "roll_no": 12,
     "name": "Rohtash",
     "last_name": "",
-    "phone_no": "",
-    "address": ""
+    "phone_no": "8168283293",
+    "address": "Near Sarv Haryana Gramin bank teh.hathin distt.palwal",
+    "img": "12.png"
   },
   {
     "roll_no": 13,
@@ -206,15 +209,17 @@
     "roll_no": "29",
     "name": "Dilip",
     "last_name": "",
-    "phone_no": "",
-    "address": ""
+    "phone_no": "9306660561",
+    "address": "Nearby All India Ayurveda hospital, badarpur - 440074",
+    "img": "29.png"
   },
   {
     "roll_no": 30,
     "name": "Harshit",
     "last_name": "",
-    "phone_no": "",
-    "address": ""
+    "phone_no": "8307462918",
+    "address": " H.no.1028, Sector 46, Faridabad, Haryana, 121010",
+    "img": "30.png"
   },
   {
     "roll_no": 31,
@@ -591,9 +596,10 @@
   {
     "roll_no": 84,
     "name": "Prateek",
-    "last_name": "",
-    "phone_no": "",
-    "address": ""
+    "last_name": "Chandila",
+    "phone_no": "7827967454",
+    "address": "Village Fatehpur chandila, Faridabad",
+    "img": "84.png"
   },
   {
     "roll_no": 85,
@@ -635,7 +641,7 @@
     "name": "Sunil",
     "last_name": "Kumar",
     "phone_no": "9999615095",
-    "address": "Faridabad "
+    "address": "Sector - 45, Faridabad "
   },
   {
     "roll_no": 91,
