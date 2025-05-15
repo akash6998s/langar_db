@@ -316,9 +316,10 @@
   {
     "roll_no": 44,
     "name": "Kamal",
-    "last_name": "Mathur",
-    "phone_no": "",
-    "address": ""
+    "last_name": "Singh Mahur",
+    "phone_no": "8392915517",
+    "address": "New Shiv. Mandir hajipur bulandshahar",
+    "img": "44.png"
   },
   {
     "roll_no": 45,
@@ -393,9 +394,10 @@
   {
     "roll_no": 55,
     "name": "Tushar",
-    "last_name": "",
-    "phone_no": "",
-    "address": ""
+    "last_name": "Singh Mahur",
+    "phone_no": "8859299288",
+    "address": "New Shiv. Mandir hajipur bulandshahar",
+    "img": "55.png"
   },
   {
     "roll_no": 56,
@@ -699,5 +701,13 @@
     "last_name": "Prajapati ",
     "phone_no": "",
     "address": ""
+  },
+  {
+    "roll_no": "99",
+    "name": "Vijay ",
+    "last_name": "Bhaiya",
+    "phone_no": "8826198233",
+    "address": "Dayalbagh Delhi",
+    "img": ""
   }
 ]

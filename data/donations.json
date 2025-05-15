@@ -91,7 +91,23 @@
         "donation": 500,
         "fine": 0
       },
+      "3": {
+        "donation": 1100,
+        "fine": 0
+      },
       "7": {
+        "donation": 551,
+        "fine": 0
+      },
+      "13": {
+        "donation": 550,
+        "fine": 0
+      },
+      "15": {
+        "donation": 601,
+        "fine": 0
+      },
+      "16": {
         "donation": 551,
         "fine": 0
       },
@@ -99,18 +115,86 @@
         "donation": 1100,
         "fine": 0
       },
+      "21": {
+        "donation": 50,
+        "fine": 0
+      },
+      "23": {
+        "donation": 551,
+        "fine": 0
+      },
+      "24": {
+        "donation": 100,
+        "fine": 0
+      },
+      "32": {
+        "donation": 500,
+        "fine": 0
+      },
+      "37": {
+        "donation": 100,
+        "fine": 0
+      },
       "40": {
         "donation": 500,
         "fine": 0
       },
-      "60": 250,
+      "47": {
+        "donation": 100,
+        "fine": 0
+      },
+      "56": {
+        "donation": 3100,
+        "fine": 0
+      },
+      "60": {
+        "donation": 150,
+        "fine": 0
+      },
+      "64": {
+        "donation": 1100,
+        "fine": 0
+      },
+      "65": {
+        "donation": 2100,
+        "fine": 0
+      },
+      "67": {
+        "donation": 200,
+        "fine": 0
+      },
+      "68": {
+        "donation": 1100,
+        "fine": 0
+      },
       "69": {
         "donation": 101,
         "fine": 0
       },
-      "75": 105,
-      "91": 100,
-      "94": 100
+      "71": {
+        "donation": 250,
+        "fine": 0
+      },
+      "75": {
+        "donation": 105,
+        "fine": 0
+      },
+      "90": {
+        "donation": 100,
+        "fine": 0
+      },
+      "91": {
+        "donation": 100,
+        "fine": 0
+      },
+      "94": {
+        "donation": 100,
+        "fine": 0
+      },
+      "99": {
+        "donation": 501,
+        "fine": 0
+      }
     }
   }
 }
