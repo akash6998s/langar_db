@@ -96,8 +96,9 @@
     "roll_no": 13,
     "name": "Ajay",
     "last_name": "Pratap",
-    "phone_no": "",
-    "address": ""
+    "phone_no": "9456634666",
+    "address": "Gali no 2, Sharma market pul pahladpur, new delhi 110044",
+    "img": "13.jpg"
   },
   {
     "roll_no": 14,
@@ -110,8 +111,9 @@
     "roll_no": 15,
     "name": "Avtar",
     "last_name": "",
-    "phone_no": "",
-    "address": ""
+    "phone_no": "7701873073",
+    "address": "h.no 329, gali no. 2, Setpur bhatta colony, sector 91, faridabad",
+    "img": "15.jpg"
   },
   {
     "roll_no": 16,
@@ -152,9 +154,10 @@
   {
     "roll_no": 21,
     "name": "Shiv",
-    "last_name": "Prasad",
-    "phone_no": "",
-    "address": ""
+    "last_name": "Pratap",
+    "phone_no": "9412145054",
+    "address": "Gali no 2 Sharma market pul pahladpur new delhi 110044",
+    "img": "21.png"
   },
   {
     "roll_no": 22,
@@ -167,8 +170,9 @@
     "roll_no": 23,
     "name": "Rakesh",
     "last_name": "Radhe-radhe",
-    "phone_no": "",
-    "address": ""
+    "phone_no": "9773687712",
+    "address": "H no. 3146, gali no. 72, e-2 block, modband, delhi",
+    "img": "23.jpg"
   },
   {
     "roll_no": 24,
@@ -253,8 +257,9 @@
     "roll_no": 35,
     "name": "Ram",
     "last_name": "Niwas",
-    "phone_no": "",
-    "address": ""
+    "phone_no": "9717310934",
+    "address": "h.no 329, gali no. 2, Setpur bhatta colony, sector 91, faridabad",
+    "img": "35.jpg"
   },
   {
     "roll_no": 36,
@@ -288,8 +293,9 @@
     "roll_no": 40,
     "name": "Deepak",
     "last_name": "Prahaladpur",
-    "phone_no": "",
-    "address": ""
+    "phone_no": "9718895998",
+    "address": "HR 29 B/7 Pul pahladpur, NEW Delhi -110044",
+    "img": "40.jpg"
   },
   {
     "roll_no": 41,
@@ -303,7 +309,7 @@
     "name": "Rajnish",
     "last_name": "",
     "phone_no": "9193391915",
-    "address": "Bulandshahr",
+    "address": "Koda Shamshabad post Aurangabad bulandshahar",
     "img": "42.png"
   },
   {
@@ -432,8 +438,9 @@
     "roll_no": 60,
     "name": "Himanshu",
     "last_name": "Gupta",
-    "phone_no": "",
-    "address": ""
+    "phone_no": "9811572573",
+    "address": "C2-1202 SRS RESIDENCY sec 88, Faridabad",
+    "img": "60.jpg"
   },
   {
     "roll_no": 61,
@@ -537,15 +544,17 @@
     "roll_no": 75,
     "name": "Ram",
     "last_name": "Prajapati",
-    "phone_no": "",
-    "address": ""
+    "phone_no": "8882938337",
+    "address": "Saraswati colony Sunny bazar, faridabad",
+    "img": "75.jpg"
   },
   {
     "roll_no": 76,
     "name": "Aman",
     "last_name": "Saxena",
-    "phone_no": "",
-    "address": ""
+    "phone_no": "70606 00839",
+    "address": "Shiv durga vihar, Lakkarpur, Faridabad ",
+    "img": "76.jpg"
   },
   {
     "roll_no": 77,
@@ -584,10 +593,10 @@
   },
   {
     "roll_no": 82,
-    "name": "Soman",
+    "name": "Saman",
     "last_name": "",
-    "phone_no": "",
-    "address": ""
+    "phone_no": "8826198233",
+    "address": "Delhi"
   },
   {
     "roll_no": 83,
@@ -644,7 +653,8 @@
     "name": "Sunil",
     "last_name": "Kumar",
     "phone_no": "9999615095",
-    "address": "Sector - 45, Faridabad "
+    "address": "Sector - 45, Faridabad ",
+    "img": "90.png"
   },
   {
     "roll_no": 91,
@@ -699,8 +709,9 @@
     "roll_no": "98",
     "name": "Mohit",
     "last_name": "Prajapati ",
-    "phone_no": "",
-    "address": ""
+    "phone_no": "8882938337",
+    "address": "Saraswati colony Sunny bazar, faridabad",
+    "img": "98.jpg"
   },
   {
     "roll_no": "99",

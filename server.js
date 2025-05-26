@@ -313,6 +313,46 @@ app.post("/add-expense", (req, res) => {
   res.json({ success: true, message: "Expense added successfully" });
 });
 
+
+// Delete expense data
+app.post("/delete-expense", (req, res) => {
+  const { year, month, index } = req.body;
+
+  if (
+    !year ||
+    !month ||
+    index === undefined ||
+    typeof index !== "number"
+  ) {
+    return res.status(400).json({
+      error: "Missing or invalid data. Please provide year, month, and index.",
+    });
+  }
+
+  let data = readJSON(expensesPath, []);
+
+  if (
+    !data[0] ||
+    !data[0][year] ||
+    !data[0][year][month] ||
+    !Array.isArray(data[0][year][month])
+  ) {
+    return res.status(404).json({ error: "Expense entry not found." });
+  }
+
+  if (index < 0 || index >= data[0][year][month].length) {
+    return res.status(400).json({ error: "Invalid expense index." });
+  }
+
+  // Remove the specific expense
+  data[0][year][month].splice(index, 1);
+
+  writeJSON(expensesPath, data);
+
+  res.json({ success: true, message: "Expense deleted successfully" });
+});
+
+
 // Delete a member by roll number
 app.post("/delete-member", (req, res) => {
   const { rollNo } = req.body;
