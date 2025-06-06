@@ -14,7 +14,7 @@ const allowedOrigins = [
   "https://langar-db-csvv.onrender.com",
   "http://localhost:5000",
   "http://localhost:3000",
-  "https://timely-pegasus-f577f8.netlify.app"
+  "https://timely-pegasus-f577f8.netlify.app",
 ];
 const corsOptions = {
   origin: function (origin, callback) {
@@ -242,19 +242,12 @@ app.get("/expenses", (req, res) => {
 
 // Update donations data
 app.post("/update-donations", (req, res) => {
-  const { year, month, rollNo, type } = req.body;
+  const { year, month, rollNo } = req.body;
   const amount = Number(req.body.amount);
 
   // Validate input
-  if (!year || !month || !rollNo || isNaN(amount) || !type) {
+  if (!year || !month || !rollNo || isNaN(amount)) {
     return res.status(400).json({ error: "Missing or invalid data" });
-  }
-
-  // Only allow 'donation' or 'fine'
-  if (type !== "donation" && type !== "fine") {
-    return res
-      .status(400)
-      .json({ error: "Invalid type. Must be 'donation' or 'fine'" });
   }
 
   // Read existing data
@@ -263,21 +256,17 @@ app.post("/update-donations", (req, res) => {
   // Initialize nested structure
   if (!data[year]) data[year] = {};
   if (!data[year][month]) data[year][month] = {};
-  if (!data[year][month][rollNo])
-    data[year][month][rollNo] = { donation: 0, fine: 0 };
-
-  // Ensure both keys exist
-  if (typeof data[year][month][rollNo][type] !== "number") {
-    data[year][month][rollNo][type] = 0;
+  if (typeof data[year][month][rollNo] !== "number") {
+    data[year][month][rollNo] = 0;
   }
 
   // Add to existing amount
-  data[year][month][rollNo][type] += amount;
+  data[year][month][rollNo] += amount;
 
   // Write back to file
   writeJSON(donationPath, data);
 
-  res.json({ success: true, message: `${type} updated successfully` });
+  res.json({ success: true, message: `Donation updated successfully` });
 });
 
 // Add expense data
@@ -313,17 +302,11 @@ app.post("/add-expense", (req, res) => {
   res.json({ success: true, message: "Expense added successfully" });
 });
 
-
 // Delete expense data
 app.post("/delete-expense", (req, res) => {
   const { year, month, index } = req.body;
 
-  if (
-    !year ||
-    !month ||
-    index === undefined ||
-    typeof index !== "number"
-  ) {
+  if (!year || !month || index === undefined || typeof index !== "number") {
     return res.status(400).json({
       error: "Missing or invalid data. Please provide year, month, and index.",
     });
@@ -351,7 +334,6 @@ app.post("/delete-expense", (req, res) => {
 
   res.json({ success: true, message: "Expense deleted successfully" });
 });
-
 
 // Delete a member by roll number
 app.post("/delete-member", (req, res) => {
@@ -469,7 +451,6 @@ app.get("/all-images", (req, res) => {
     res.json(fileUrls);
   });
 });
-
 
 app.use("/uploads", express.static(path.join(__dirname, "data", "uploads")));
 
