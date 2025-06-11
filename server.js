@@ -4,6 +4,7 @@ const multer = require("multer");
 const path = require("path");
 const cors = require("cors");
 const archiver = require("archiver");
+const cron = require("node-cron");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -74,6 +75,31 @@ app.use(express.json()); // For parsing application/json
 app.use(express.urlencoded({ extended: true }));
 
 // Routes
+
+// Route to download entire backend folder as zip
+app.get("/download-backend", (req, res) => {
+  const folderToZip = __dirname; // This will zip the entire backend folder
+
+  const zipFileName = "backend.zip";
+  res.setHeader("Content-Disposition", `attachment; filename=${zipFileName}`);
+  res.setHeader("Content-Type", "application/zip");
+
+  const archive = archiver("zip", { zlib: { level: 9 } });
+
+  archive.on("error", (err) => {
+    res.status(500).send({ error: err.message });
+  });
+
+  archive.pipe(res);
+
+  // Zip the current backend folder but exclude node_modules and zip itself if needed
+  archive.glob("**/*", {
+    cwd: folderToZip,
+    ignore: ["node_modules/**", "backend.zip", "data/uploads/**"], // Optional: exclude heavy folders
+  });
+
+  archive.finalize();
+});
 
 app.get("/download-all-images", (req, res) => {
   const uploadDir = path.join(__dirname, "data", "uploads");
@@ -518,6 +544,84 @@ app.get("/overall-summary", (req, res) => {
       netAmount,
     },
   });
+});
+
+const backupBase = path.join(__dirname, "backup");
+const dayFolder = path.join(backupBase, "day-backup");
+const weekFolder = path.join(backupBase, "week-backup");
+const monthFolder = path.join(backupBase, "month-backup");
+
+// Ensure all folders exist
+[backupBase, dayFolder, weekFolder, monthFolder].forEach((folder) => {
+  if (!fs.existsSync(folder)) {
+    fs.mkdirSync(folder, { recursive: true });
+  }
+});
+
+// Common backup function
+const createBackupZip = (targetFolder, label) => {
+  // Ensure only the latest 10 files remain
+  const existingFiles = fs
+    .readdirSync(targetFolder)
+    .filter((file) => file.endsWith(".zip"))
+    .map((file) => ({
+      name: file,
+      time: fs.statSync(path.join(targetFolder, file)).ctimeMs,
+    }))
+    .sort((a, b) => a.time - b.time); // oldest first
+
+  // If already 10, delete the oldest
+  if (existingFiles.length >= 5) {
+    const oldestFile = existingFiles[0].name;
+    const filePathToDelete = path.join(targetFolder, oldestFile);
+    fs.unlinkSync(filePathToDelete);
+    console.log(`🗑️ Deleted oldest ${label} backup: ${oldestFile}`);
+  }
+
+  const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+  const zipFilePath = path.join(
+    targetFolder,
+    `backup-${label}-${timestamp}.zip`
+  );
+  const output = fs.createWriteStream(zipFilePath);
+  const archive = archiver("zip", { zlib: { level: 9 } });
+
+  output.on("close", () => {
+    console.log(
+      `✅ ${label} backup created: ${zipFilePath} (${archive.pointer()} bytes)`
+    );
+  });
+
+  archive.on("error", (err) => {
+    console.error(`❌ Error creating ${label} backup:`, err);
+  });
+
+  archive.pipe(output);
+
+  archive.glob("**/*", {
+    cwd: __dirname,
+    ignore: ["node_modules/**", "backup/**", "data/uploads/**"],
+  });
+
+  archive.finalize();
+};
+
+// 🗓️ Daily backup at 3:00 AM
+cron.schedule("0 3 * * *", () => {
+  console.log("⏰ Running DAILY backup...");
+  createBackupZip(dayFolder, "daily");
+});
+
+// 🗓️ Weekly backup on Monday at 4:00 AM
+cron.schedule("0 4 * * 1", () => {
+  console.log("⏰ Running WEEKLY backup...");
+  createBackupZip(weekFolder, "weekly");
+});
+
+// 🗓️ Monthly backup on 1st of month at 5:00 AM
+cron.schedule("0 5 1 * *", () => {
+  console.log("⏰ Running MONTHLY backup...");
+  createBackupZip(monthFolder, "monthly");
 });
 
 // Start server

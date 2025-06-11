@@ -1807,13 +1807,22 @@
           "76": "present"
         },
         "10": {
+          "1": "present",
+          "4": "present",
           "10": "present",
           "11": "present",
+          "15": "present",
+          "18": "present",
           "22": "present",
           "29": "present",
+          "30": "present",
+          "40": "present",
           "65": "present",
-          "83": "present"
-        } 
+          "71": "present",
+          "83": "present",
+          "90": "present",
+          "91": "present"
+        }
       }
     }
   }
