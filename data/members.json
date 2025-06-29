@@ -277,17 +277,19 @@
   },
   {
     "roll_no": 38,
-    "name": "Anup",
+    "name": "Anoop",
     "last_name": "Sgm",
-    "phone_no": "",
-    "address": ""
+    "phone_no": "8178829031",
+    "address": "H no.FCA-1327, Block-C, SGM nagar, Faridabad",
+    "img": "38.jpg"
   },
   {
     "roll_no": 39,
     "name": "Akshit",
     "last_name": "",
-    "phone_no": "",
-    "address": ""
+    "phone_no": "8178829031",
+    "address": "H no.FCA-1327, Block-C, SGM nagar, Faridabad ",
+    "img": "39.jpg"
   },
   {
     "roll_no": 40,
@@ -686,17 +688,19 @@
   },
   {
     "roll_no": 95,
-    "name": "Kailash",
-    "last_name": "Atali",
-    "phone_no": "",
-    "address": ""
+    "name": "Ankit",
+    "last_name": "Sharma",
+    "phone_no": "9717094912",
+    "address": "Vill- Nithari, sec-31, Noida",
+    "img": "95.jpg"
   },
   {
     "roll_no": 96,
-    "name": "Mahendra",
-    "last_name": "Atali",
-    "phone_no": "",
-    "address": ""
+    "name": "Deepak",
+    "last_name": "Bulandshahr ",
+    "phone_no": "7310978074",
+    "address": "Vill- surjawali, bulandshahr ",
+    "img": "96.jpg"
   },
   {
     "roll_no": 97,
