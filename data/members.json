@@ -375,8 +375,9 @@
     "roll_no": 51,
     "name": "Rupesh",
     "last_name": "",
-    "phone_no": "",
-    "address": ""
+    "phone_no": "9810699632",
+    "address": "sec 88 new bharat colony Greater Faridabad",
+    "img": "51.jpg"
   },
   {
     "roll_no": 52,
@@ -518,8 +519,9 @@
     "roll_no": 71,
     "name": "Shailesh",
     "last_name": "",
-    "phone_no": "",
-    "address": ""
+    "phone_no": "8700572016",
+    "address": "D 6 Shiv Durga vihar lakkadpur Faridabad Haryana",
+    "img": "71.jpg"
   },
   {
     "roll_no": 72,
@@ -597,7 +599,7 @@
     "roll_no": 82,
     "name": "Saman",
     "last_name": "",
-    "phone_no": "8826198233",
+    "phone_no": "8279576366",
     "address": "Delhi"
   },
   {
@@ -667,10 +669,11 @@
   },
   {
     "roll_no": 92,
-    "name": "Anuj",
+    "name": "Rishav yadav",
     "last_name": "Meethapur",
-    "phone_no": "",
-    "address": ""
+    "phone_no": "8076789170",
+    "address": "Saurabh vihar jaitpur Badarpur",
+    "img": "92.jpg"
   },
   {
     "roll_no": 93,
@@ -722,7 +725,7 @@
     "name": "Vijay ",
     "last_name": "Bhaiya",
     "phone_no": "8826198233",
-    "address": "Dayalbagh Delhi",
-    "img": ""
+    "address": "A-72, Second floor Back side, Near Dayalbagh police chowki, Dayalbagh,  Faridabad, Haryana.",
+    "img": "99.jpg"
   }
 ]
