@@ -2480,6 +2480,36 @@
           "4": "present",
           "62": "present",
           "76": "present"
+        },
+        "22": {
+          "1": "present",
+          "2": "present",
+          "10": "present",
+          "25": "present",
+          "29": "present",
+          "32": "present",
+          "40": "present",
+          "52": "present",
+          "56": "present",
+          "59": "present",
+          "64": "present",
+          "65": "present",
+          "70": "present",
+          "71": "present",
+          "76": "present",
+          "83": "present",
+          "84": "present",
+          "90": "present",
+          "92": "present",
+          "95": "present"
+        },
+        "24": {
+          "1": "present",
+          "30": "present",
+          "40": "present",
+          "76": "present",
+          "90": "present",
+          "93": "present"
         }
       }
     }
